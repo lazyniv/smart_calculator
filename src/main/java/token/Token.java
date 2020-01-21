@@ -10,6 +10,14 @@ public class Token {
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+"); //FIXME number may have a prefix with sign "-" or "+"
 
+    public static final Token LEFT_BRACKET = new Token("(");
+
+    public static final Token RIGHT_BRACKET = new Token(")");
+
+    public static final Token UNARY_MINUS = new Token("~");
+
+    public static final Token UNARY_PLUS = new Token("#");
+
     public Token(String token) {
         this.token = token;
     }
@@ -33,5 +41,10 @@ public class Token {
     @Override
     public int hashCode() {
         return Objects.hash(token);
+    }
+
+    @Override
+    public String toString() {
+        return token;
     }
 }

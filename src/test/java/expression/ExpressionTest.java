@@ -6,74 +6,138 @@ import token.Token;
 
 import java.util.List;
 
-class ExpressionTest {
+public class ExpressionTest {
+
     @Test
-    void testIsAssignment() {
-        String test1 = "var = a + b + 10";
-        Expression expressionTest1 = new Expression(test1);
-        Assert.assertTrue(expressionTest1.isAssignment());
-
-        String test2 = "var1=a*b";
-        Expression expressionTest2 = new Expression(test2);
-        Assert.assertTrue(expressionTest1.isAssignment());
-
-        String test3 = "var=a=b";
-        Expression expressionTest3 = new Expression(test3);
-        Assert.assertTrue(expressionTest2.isAssignment());
-
-        String test4 = "100=a+b";
-        Expression expressionTest4 = new Expression(test4);
-        Assert.assertTrue(expressionTest4.isAssignment());
-
-        String test5 = "foo * bar / a = 1";
-        Expression expressionTest5 = new Expression(test5);
-        Assert.assertFalse(expressionTest5.isAssignment());
+    public void isAssignment_SimpleAssignmentGiven_True() {
+        String test = "var = a + b + 10";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isAssignment());
     }
 
     @Test
-    void testIsCalculation() {
-        String simpleTest = "1 + var";
-        Assert.assertTrue(new Expression(simpleTest).isCalculation());
-
-        String allOperatorsTest = "a * b / c ^ k - 100 + 200";
-        Assert.assertTrue(new Expression(allOperatorsTest).isCalculation());
-
-        String parenthesesTest  = "(foo + bar)*var";
-        Assert.assertTrue(new Expression(parenthesesTest).isCalculation());
-
-        String withoutSpacesTest = "100/5*(1+4)";
-        Assert.assertTrue(new Expression(withoutSpacesTest).isCalculation());
-
-        String unpairedParenthesesWrongTest = "(10 - 5)^a)";
-        Assert.assertFalse(new Expression(unpairedParenthesesWrongTest).isCalculation());
-        
-        String multiplePlusTest = "foo ++++ bar";
-        Assert.assertTrue(new Expression(multiplePlusTest).isCalculation());
-
-        String multipleMinusTest = "foo ---- bar";
-        Assert.assertTrue(new Expression(multipleMinusTest).isCalculation());
-
-        String multipleMulDivPowWrongTest = "foo ** bar // foo ^^ bar";
-        Assert.assertFalse(new Expression(multipleMulDivPowWrongTest).isCalculation());
-
-        String unaryMinusTest = "-a + -b";
-        Assert.assertTrue(new Expression(unaryMinusTest).isCalculation());
-
-        String unaryPlusTest = "+a + +b";
-        Assert.assertTrue(new Expression(unaryPlusTest).isCalculation());
-
-        String alternationPlusMinusWrongTest = "a +- b";
-        Assert.assertFalse(new Expression(alternationPlusMinusWrongTest).isAssignment());
+    public void isAssignment_AssignmentWithoutSpacesGiven_True() {
+        String test = "var=a*b";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isAssignment());
     }
 
     @Test
-    void testToTokensList() {
-        String simpleTest = "a + b * c";
-        List<Token> expectedSimpleTestTokensList = List.of(
+    public void isAssignment_AssignmentWithMoreThenOneSignEqualGiven_False() {
+        String test = "var=a=b";
+        Expression testExpression = new Expression(test);
+        Assert.assertFalse(testExpression.isAssignment());
+    }
+
+    @Test
+    public void isAssignment_AssignmentWithVariableNameThatContainsDigitGiven_True() {
+        String test = "var10 = a + b";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isAssignment());
+    }
+
+    @Test
+    public void isAssignment_AssignmentWithVariableNameAsNumberGiven_False() {
+        String test = "100 = a + b";
+        Expression testExpression = new Expression(test);
+        Assert.assertFalse(testExpression.isAssignment());
+    }
+
+    @Test
+    public void isAssignment_AssignmentWhichContainEqualAtTheEndGiven_False() { //FIXME change name
+        String test = "foo * bar = 1";
+        Expression testExpression = new Expression(test);
+        Assert.assertFalse(testExpression.isAssignment());
+    }
+
+    @Test
+    public void isCalculation_SimpleExpressionGiven_True() {
+        String test = "a + 1";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionThatContainsAllOperatorsGiven_True() {
+        String test = "a * b / c ^ k - 100 + 200";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionThatContainsPairedParenthesesGiven_True() {
+        String test = "(foo + bar)*var";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWithoutSpacesGiven_True() {
+        String test = "100/5*(1+4)";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWhichContainsSeveralPlusesInARowGiven_True() {
+        String test = "foo ++++ bar";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWhichContainsSeveralMinusesInARowGiven_True() {
+        String test = "foo ---- bar";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWhichContainsSeveralMulsOrDivsOrPowsInARowGiven_False() {
+        String test = "foo ** bar // foo ^^ bar";
+        Expression testExpression = new Expression(test);
+        Assert.assertFalse(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWhichContainsUnaryMinus_True() {
+        String test = "-a + -b";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWhichContainsUnaryPlus_True() {
+        String test = "+a + +b";
+        Expression testExpression = new Expression(test);
+        Assert.assertTrue(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWhichContainsAlternationPlusAndMinusGiven_False() {
+        String test = "a +- b";
+        Expression testExpression = new Expression(test);
+        Assert.assertFalse(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWithMissedOperatorGiven_False() {
+        String test = "bar foo";
+        Expression testExpression = new Expression(test);
+        Assert.assertFalse(testExpression.isCalculation());
+    }
+
+   // @Test
+    /*public void toTokensList_SimpleExpressionGiven_ShouldBeRightResult() {
+        String test = "a + b * c";
+        List<Token> expected = List.of(
                 new Token("a"), new Token("+"), new Token("b"),
                 new Token("*"), new Token("c")
         );
-        Assert.assertEquals(new Expression(simpleTest).toTokensList(), expectedSimpleTestTokensList);
+        Expression testExpression = new Expression(test);
+        List<Token> result = testExpression.toTokensList();
+        Assert.assertEquals(result, expected);
+    }
 
         String withoutSpacesTest = "100-x^y*(a+b)";
         List<Token> expectedWithoutSpacesTestTokensList = List.of(
@@ -105,7 +169,7 @@ class ExpressionTest {
     }
 
     @Test
-    void testToPostfixTokensList() {
+    public void testToPostfixTokensList() {
         String simpleTest = "a + b * c";
         List<Token> expectedSimpleTestPostfixTokensList = List.of(
                 new Token("a"), new Token("b"), new Token("c"),
@@ -144,6 +208,6 @@ class ExpressionTest {
         );
 
 
-    }
+    }*/
 
 }
