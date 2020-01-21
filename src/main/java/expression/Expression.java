@@ -2,6 +2,7 @@ package expression;
 
 import exceptions.InvalidAssignmentException;
 import exceptions.InvalidExpressionException;
+import expression_utils.ExpressionUtils;
 import token.Token;
 
 import java.util.*;
@@ -21,7 +22,7 @@ public class Expression {
 
     private static final Pattern DELIMITER_PATTERN = Pattern.compile("[+\\-*/^()]"); //FIXME change name
 
-    private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s)|\\s+)";
+    private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
 
     private static final Map<Token, Integer> OPERATOR_TO_PRIORITY = Map.of(
             Token.UNARY_MINUS, 4, Token.UNARY_PLUS, 4,
@@ -76,7 +77,10 @@ public class Expression {
     }
 
     public List<Token> toTokensList() {
-        String[] tokens = expression.split(String.format(WITH_DELIMITER,DELIMITER_PATTERN));
+        String preparedExpression = ExpressionUtils.eliminateMultiplePlusAndMinus(
+                ExpressionUtils.setUnaryOperators(expression)
+        );
+        String[] tokens = preparedExpression.replaceAll("\\s+","").split(String.format(WITH_DELIMITER,DELIMITER_PATTERN));  //FIXME it's костыль
         List<Token> tokensList = new ArrayList<>();
         Arrays.stream(tokens).forEach(t -> tokensList.add(new Token(t)));
         return tokensList;
@@ -85,6 +89,5 @@ public class Expression {
     @Override
     public String toString() {
         return expression;
-
     }
 }

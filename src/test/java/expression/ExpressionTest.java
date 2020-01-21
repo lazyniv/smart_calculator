@@ -1,5 +1,6 @@
 package expression;
 
+import exceptions.InvalidExpressionException;
 import org.junit.Assert;
 import org.junit.Test;
 import token.Token;
@@ -100,14 +101,14 @@ public class ExpressionTest {
     }
 
     @Test
-    public void isCalculation_ExpressionWhichContainsUnaryMinus_True() {
+    public void isCalculation_ExpressionWhichContainsUnaryMinusGiven_True() {
         String test = "-a + -b";
         Expression testExpression = new Expression(test);
         Assert.assertTrue(testExpression.isCalculation());
     }
 
     @Test
-    public void isCalculation_ExpressionWhichContainsUnaryPlus_True() {
+    public void isCalculation_ExpressionWhichContainsUnaryPlusGiven_True() {
         String test = "+a + +b";
         Expression testExpression = new Expression(test);
         Assert.assertTrue(testExpression.isCalculation());
@@ -127,87 +128,92 @@ public class ExpressionTest {
         Assert.assertFalse(testExpression.isCalculation());
     }
 
-   // @Test
-    /*public void toTokensList_SimpleExpressionGiven_ShouldBeRightResult() {
+   @Test
+   public void toTokensList_SimpleExpressionGiven_ShouldBeRightResult() {
         String test = "a + b * c";
         List<Token> expected = List.of(
                 new Token("a"), new Token("+"), new Token("b"),
                 new Token("*"), new Token("c")
         );
         Expression testExpression = new Expression(test);
-        List<Token> result = testExpression.toTokensList();
-        Assert.assertEquals(result, expected);
+        List<Token> actual = testExpression.toTokensList();
+        Assert.assertEquals(expected, actual);
     }
 
-        String withoutSpacesTest = "100-x^y*(a+b)";
-        List<Token> expectedWithoutSpacesTestTokensList = List.of(
+    @Test
+    public void toTokensList_ExpressionWithoutSpacesGiven_ShouldBeRightResult() {
+        String test = "100-x^y*(a+b)";
+        List<Token> expected = List.of(
                 new Token("100"), new Token("-"), new Token("x"),
                 new Token("^"), new Token("y"), new Token("*"),
                 new Token("("), new Token("a"), new Token("+"),
-                new Token(")")
+                new Token("b"), new Token(")")
         );
-        Assert.assertEquals(new Expression(simpleTest).toTokensList(), expectedWithoutSpacesTestTokensList);
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toTokensList();
+        Assert.assertEquals(expected, actual);
+    }
 
-        String unaryMinusTest = "-a";
-        List<Token> expectedUnaryMinusTestTokensList = List.of(
-                new Token("-"), new Token("a")
-        );
-        Assert.assertEquals(new Expression(unaryMinusTest).toTokensList(), expectedUnaryMinusTestTokensList);
-
-        String unaryPlusTest = "+a";
-        List<Token> expectedUnaryPlusTestTokensList = List.of(
-                new Token("+"), new Token("a")
-        );
-        Assert.assertEquals(new Expression(unaryPlusTest).toTokensList(), expectedUnaryPlusTestTokensList);
-
-        String longVariableAndValueTest = "variable1 + variable2 / 1000";
-        List<Token> expectedLongVariableAndValueTestTokensList = List.of(
+    @Test
+    public void toTokensList_ExpressionWhichContainsLongVariableAndValueGiven_ShouldBeRightResult() {
+        String test = "variable1 + variable2 / 1000";
+        List<Token> expected = List.of(
                 new Token("variable1"), new Token("+"),
                 new Token("variable2"), new Token("/"),
                 new Token("1000")
         );
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toTokensList();
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
-    public void testToPostfixTokensList() {
-        String simpleTest = "a + b * c";
-        List<Token> expectedSimpleTestPostfixTokensList = List.of(
+    public void ToPostfixTokensList_SimpleExpressionGiven_ShouldBeRightResult() throws InvalidExpressionException {
+        String test = "a + b * c";
+        List<Token> expected = List.of(
                 new Token("a"), new Token("b"), new Token("c"),
                 new Token("*"), new Token("+")
         );
-        Assert.assertEquals(new Expression(simpleTest).toTokensList(), expectedSimpleTestPostfixTokensList);
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toPostfixTokensList();
+        Assert.assertEquals(expected, actual);
+    }
 
-        String withoutSpacesTest = "100-x^y*(a+b)";
-        List<Token> expectedWithoutSpacesTestPostfixTokensList = List.of(
+    @Test
+    public void ToPostfixTokensList_ExpressionWithPairedParenthesesGiven_ShouldBeRightResult() throws InvalidExpressionException {
+        String test = "(a + b) * c";
+        List<Token> expected = List.of(
+                new Token("a"), new Token("b"), new Token("+"),
+                new Token("c"), new Token("*")
+        );
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toPostfixTokensList();
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void ToPostfixTokensList_ExpressionWithoutSpacesGiven_ShouldBeRightResult() throws InvalidExpressionException {
+        String test = "100-x^y*(a+b)";
+        List<Token> expected = List.of(
                 new Token("100"), new Token("x"), new Token("y"),
                 new Token("^"), new Token("a"), new Token("b"),
                 new Token("+"), new Token("*"), new Token("-")
         );
-        Assert.assertEquals(new Expression(simpleTest).toTokensList(), expectedWithoutSpacesTestPostfixTokensList);
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toPostfixTokensList();
+        Assert.assertEquals(expected, actual);
+    }
 
-        String unaryMinusTest = "-a";
-        List<Token> expectedUnaryMinusTestPostfixTokensList = List.of(
-                new Token("a"), new Token("~") // "~" represents a unary minus
+    @Test(expected = InvalidExpressionException.class)
+    public void ToPostfixTokensList_ExpressionWithUnpairedParenthesesGiven_ShouldThrowsInvalidExpressionException() throws InvalidExpressionException {
+        String test = "(a + b)) * c";
+        List<Token> expected = List.of(
+                new Token("a"), new Token("b"), new Token("+"),
+                new Token("c"), new Token("*")
         );
-        Assert.assertEquals(new Expression(unaryMinusTest).toTokensList(), expectedUnaryMinusTestPostfixTokensList);
-
-        String unaryPlusTest = "+a";
-        List<Token> expectedUnaryPlusTestPostfixTokensList = List.of(
-                new Token("a"), new Token("#") // "#" represents a unary plus
-        );
-        Assert.assertEquals(new Expression(unaryPlusTest).toTokensList(), expectedUnaryPlusTestPostfixTokensList);
-
-        String longVariableAndValueTest = "variable1 + variable2 / 1000";
-        List<Token> expectedLongVariableAndValueTestPostfixTokensList = List.of(
-                new Token("variable1"), new Token("variable2"),
-                new Token("1000"), new Token("/"),
-                new Token("+")
-        );
-        Assert.assertEquals(new Expression(longVariableAndValueTest).toTokensList(),
-                expectedLongVariableAndValueTestPostfixTokensList
-        );
-
-
-    }*/
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toPostfixTokensList();
+        Assert.assertEquals(expected, actual);
+    }
 
 }
