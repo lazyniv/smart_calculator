@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Expression {
     private String expression;
 
-    private static final Pattern CALCULATION_PATTERN = Pattern.compile("(\\+*|-*|\\(*)([a-zA-Z]+|\\d+)(\\s*(\\++|-+|/+)\\s*(\\+*|-*)\\(*([a-zA-Z]+|\\d+)\\)*)*"); //FIXME decompozite it
+    private static final Pattern CALCULATION_PATTERN = Pattern.compile("(\\+*|-*|\\(*)([a-zA-Z]+|\\d+)(\\s*(\\++|-+|/+)\\s*(\\+*|-*)\\(*([a-zA-Z]+|\\d+)\\)*)*"); //FIXME decompose it
 
     private static final Pattern ASSIGNMENT_PATTERN = Pattern.compile("([a-zA-aZ]|\\d)+\\s*=.+");//FIXME would enough "="
 
@@ -25,11 +25,11 @@ public class Expression {
     }
 
     public boolean isAssignment() {
-        return true;
+        return ASSIGNMENT_PATTERN.matcher(expression).matches();
     }
 
     public boolean isCalculation() {
-        return true;
+        return CALCULATION_PATTERN.matcher(expression).matches();
     }
 
     public List<Token> toPostfixTokensList() {
