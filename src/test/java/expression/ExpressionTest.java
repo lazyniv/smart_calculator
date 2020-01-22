@@ -205,7 +205,7 @@ public class ExpressionTest {
     }
 
     @Test(expected = InvalidExpressionException.class)
-    public void ToPostfixTokensList_ExpressionWithUnpairedParenthesesGiven_ShouldThrowsInvalidExpressionException() throws InvalidExpressionException {
+    public void ToPostfixTokensList_ExpressionWithUnpairedRightBracketGiven_ShouldThrowsInvalidExpressionException() throws InvalidExpressionException {
         String test = "(a + b)) * c";
         List<Token> expected = List.of(
                 new Token("a"), new Token("b"), new Token("+"),
@@ -215,5 +215,19 @@ public class ExpressionTest {
         List<Token> actual = testExpression.toPostfixTokensList();
         Assert.assertEquals(expected, actual);
     }
+
+    @Test(expected = InvalidExpressionException.class)
+    public void ToPostfixTokensList_ExpressionWithLeftParenthesesGiven_ShouldThrowsInvalidExpressionException() throws InvalidExpressionException {
+        String test = "(a + b) * (c";
+        List<Token> expected = List.of(
+                new Token("a"), new Token("b"), new Token("+"),
+                new Token("c"), new Token("*")
+        );
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toPostfixTokensList();
+        Assert.assertEquals(expected, actual);
+    }
+
+
 
 }

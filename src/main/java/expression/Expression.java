@@ -58,17 +58,26 @@ public class Expression {
                     stack.offerLast(token);
                 }
                 else if(token.equals(Token.RIGHT_BRACKET)) {
-                    while(!stack.isEmpty() && !stack.peekLast().equals(Token.LEFT_BRACKET)) {
+                    if(!stack.contains(Token.LEFT_BRACKET)){
+                        throw new InvalidExpressionException("Invalid expression");
+                    }
+                    while(!stack.peekLast().equals(Token.LEFT_BRACKET)) {
                         postfixTokensList.add(stack.pollLast());
+                        if(stack.isEmpty()) {
+                            throw new InvalidExpressionException("Invalid expression");
+                        }
                     }
                     stack.pollLast();
                 } else {
-                    while(OPERATOR_TO_PRIORITY.get(token) <= OPERATOR_TO_PRIORITY.get(stack.peekLast())) {
+                    while(!stack.isEmpty() && !stack.peekLast().equals(Token.LEFT_BRACKET )&& OPERATOR_TO_PRIORITY.get(token) <= OPERATOR_TO_PRIORITY.get(stack.peekLast())) {
                         postfixTokensList.add(stack.pollLast());
                     }
                     stack.offerLast(token);
                 }
             }
+        }
+        while(!stack.isEmpty() && !stack.peekLast().equals(Token.LEFT_BRACKET)) {
+            postfixTokensList.add(stack.pollLast());
         }
         if(!stack.isEmpty()) {
             throw new InvalidExpressionException("Invalid expression");
