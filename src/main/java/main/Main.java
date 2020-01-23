@@ -13,16 +13,20 @@ public class Main {
         while(true) {
             String line = scanner.nextLine();
             if(line.equals("/exit")) {
+                System.out.println("Bye!");
                 break;
             }
             if(line.equals("/help")) {
                 Calculator.printHelp();
+                continue;
             }
             if(line.equals("")) {
                 System.out.print("");
+                continue;
             }
             if(line.contains("/")) {
                 System.out.println("Unknown command");
+                continue;
             }
             Expression expression = new Expression(line);
             try {

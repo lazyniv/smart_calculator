@@ -1,6 +1,5 @@
 package expression;
 
-import exceptions.InvalidAssignmentException;
 import exceptions.InvalidExpressionException;
 import expression_utils.ExpressionUtils;
 import token.Token;
