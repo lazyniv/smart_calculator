@@ -75,6 +75,13 @@ public class Calculator {
         return variableToValue.get(variable);
     }
 
+    public static void printHelp() {
+        System.out.println("Usage:\n"+
+                "help\tPrint this message" +
+                "exit\tExit from smart calculator"
+        );
+    }
+
     private int parseToken(Token token) throws CalculatorException { //May occurs left/right bracket
         if (token.isVariable()) {
             if (!variableToValue.containsKey(token)) {
