@@ -8,7 +8,7 @@ public class Token {
 
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zA-Z]+"); //FIXME variable may have a prefix with sign "-" or "+"
 
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+"); //FIXME number may have a prefix with sign "-" or "+"
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("[-+]?\\d+"); //FIXME number may have a prefix with sign "-" or "+"
 
     public static final Token LEFT_BRACKET = new Token("(");
 
@@ -20,6 +20,10 @@ public class Token {
 
     public Token(String token) {
         this.token = token;
+    }
+
+    public Token(int token) {
+        this.token = Integer.toString(token);
     }
 
     public boolean isVariable() {
@@ -47,4 +51,5 @@ public class Token {
     public String toString() {
         return token;
     }
+
 }

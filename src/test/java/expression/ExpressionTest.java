@@ -128,8 +128,24 @@ public class ExpressionTest {
         Assert.assertFalse(testExpression.isCalculation());
     }
 
-   @Test
-   public void toTokensList_SimpleExpressionGiven_ShouldBeRightResult() {
+    @Test
+    public void isCalculation_ExpressionWithOperatorAtTheEnd_False() {
+        String test = "a + b +";
+        Expression testExpression = new Expression(test);
+        Assert.assertFalse(testExpression.isCalculation());
+    }
+
+    @Test
+    public void isCalculation_ExpressionWithMissedValue_False() {
+        String test = "a + + b";
+        Expression testExpression = new Expression(test);
+        Assert.assertFalse(testExpression.isCalculation());
+    }
+
+
+
+    @Test
+    public void toTokensList_SimpleExpressionGiven_ShouldBeRightResult() {
         String test = "a + b * c";
         List<Token> expected = List.of(
                 new Token("a"), new Token("+"), new Token("b"),
@@ -222,6 +238,18 @@ public class ExpressionTest {
         List<Token> expected = List.of(
                 new Token("a"), new Token("b"), new Token("+"),
                 new Token("c"), new Token("*")
+        );
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toPostfixTokensList();
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void ToPostfixTokensList_ExpressionWithUnaryMinusGiven_ShouldBeRightResult() throws InvalidExpressionException {
+        String test = "-a + -b";
+        List<Token> expected = List.of(
+                new Token("a"), new Token("~"), new Token("b"),
+                new Token("~"), new Token("+")
         );
         Expression testExpression = new Expression(test);
         List<Token> actual = testExpression.toPostfixTokensList();

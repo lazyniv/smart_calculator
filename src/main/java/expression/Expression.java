@@ -20,7 +20,7 @@ public class Expression {
     private static final Pattern ASSIGNMENT_PATTERN = Pattern.compile("[a-zA-Z]([a-zA-Z]|\\d)*\\s*=\\s*" +
             CALCULATION_PATTERN.pattern());//FIXME variable might contain digits
 
-    private static final Pattern DELIMITER_PATTERN = Pattern.compile("[+\\-*/^()]"); //FIXME change name
+    private static final Pattern DELIMITER_PATTERN = Pattern.compile("[+\\-*/^()#~]"); //FIXME change name
 
     private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
 
@@ -29,8 +29,13 @@ public class Expression {
             new Token("^"), 3, new Token("*"), 2, new Token("/"), 2,
             new Token("+"), 1, new Token("-"), 1
     );
+
     public Expression(String expression) {
         this.expression = expression;
+    }
+
+    public Expression(Token token) {
+        this.expression = token.toString();
     }
 
     public boolean isAssignment() {
@@ -59,17 +64,15 @@ public class Expression {
                 }
                 else if(token.equals(Token.RIGHT_BRACKET)) {
                     if(!stack.contains(Token.LEFT_BRACKET)){
-                        throw new InvalidExpressionException("Invalid expression");
+                        throw new InvalidExpressionException("Invalid expression"); //Unpaired parentheses
                     }
                     while(!stack.peekLast().equals(Token.LEFT_BRACKET)) {
                         postfixTokensList.add(stack.pollLast());
-                        if(stack.isEmpty()) {
-                            throw new InvalidExpressionException("Invalid expression");
-                        }
                     }
                     stack.pollLast();
                 } else {
-                    while(!stack.isEmpty() && !stack.peekLast().equals(Token.LEFT_BRACKET )&& OPERATOR_TO_PRIORITY.get(token) <= OPERATOR_TO_PRIORITY.get(stack.peekLast())) {
+                    while(!stack.isEmpty() && !stack.peekLast().equals(Token.LEFT_BRACKET )
+                            && OPERATOR_TO_PRIORITY.get(token) <= OPERATOR_TO_PRIORITY.get(stack.peekLast())) {
                         postfixTokensList.add(stack.pollLast());
                     }
                     stack.offerLast(token);
@@ -80,9 +83,16 @@ public class Expression {
             postfixTokensList.add(stack.pollLast());
         }
         if(!stack.isEmpty()) {
-            throw new InvalidExpressionException("Invalid expression");
+            throw new InvalidExpressionException("Invalid expression"); //Unpaired parentheses
         }
         return postfixTokensList;
+    }
+
+    public List<Token> split(String regex, int limit) {
+        String[] tokens = expression.split(regex, limit);
+        List<Token> tokensList = new ArrayList<>();
+        Arrays.stream(tokens).forEach(t -> tokensList.add(new Token(t)));
+        return tokensList;
     }
 
     public List<Token> toTokensList() {
