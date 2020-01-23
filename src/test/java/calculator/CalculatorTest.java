@@ -2,6 +2,8 @@ package calculator;
 
 import calculator.Calculator;
 import exceptions.CalculatorException;
+import exceptions.InvalidAssignmentException;
+import exceptions.InvalidIdentifierException;
 import expression.Expression;
 import org.junit.Assert;
 import org.junit.Test;
@@ -84,7 +86,7 @@ public class CalculatorTest {
     }
 
     @Test
-    public void assign_AssignmentWithoutSpacesAroundVariableName_ShouldBeWorkRight() throws CalculatorException {
+    public void assign_AssignmentWithoutSpacesAroundVariableNameGiven_ShouldBeWorkRight() throws CalculatorException {
         String test = "var=10 - 1";
         Expression assignment = new Expression(test);
         Calculator calculator = new Calculator();
@@ -93,7 +95,7 @@ public class CalculatorTest {
     }
 
     @Test
-    public void assign_AssignmentFromAnotherVariable_ShouldBeWorkRight() throws CalculatorException {
+    public void assign_AssignmentFromAnotherVariableGiven_ShouldBeWorkRight() throws CalculatorException {
         String test = "var = a";
         Expression assignment = new Expression(test);
         Calculator calculator = new Calculator();
@@ -101,4 +103,23 @@ public class CalculatorTest {
         calculator.assign(assignment);
         Assert.assertEquals(100, calculator.getVariable(new Token("var")));
     }
+
+    @Test(expected = InvalidIdentifierException.class)
+    public void assign_AssignmentWithInvalidIdentifierGiven_ShouldThrowsInvalidIdentifierException() throws CalculatorException {
+        String test = "var100 = 100";
+        Expression assignment = new Expression(test);
+        Calculator calculator = new Calculator();
+        calculator.assign(assignment);
+    }
+
+
+    @Test(expected = InvalidAssignmentException.class)
+    public void assign_AssignmentWithInvalidAssignmentGiven_ShouldThrowsInvalidAssignmentException() throws CalculatorException {
+        String test = "var = 100 = 100";
+        Expression assignment = new Expression(test);
+        Calculator calculator = new Calculator();
+        calculator.assign(assignment);
+    }
+
+
 }

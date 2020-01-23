@@ -1,9 +1,6 @@
 package calculator;
 
-import exceptions.CalculatorException;
-import exceptions.InvalidExpressionException;
-import exceptions.InvalidIdentifierException;
-import exceptions.UnknownVariableException;
+import exceptions.*;
 import expression.Expression;
 import token.Token;
 
@@ -67,7 +64,7 @@ public class Calculator {
         Expression calculationExpression = new Expression(tokensList.get(1));
 
         if(!calculationExpression.isCalculation()) {
-            throw new InvalidIdentifierException("Invalid assignment");
+            throw new InvalidAssignmentException("Invalid assignment");
         }
 
         int assignedValue = evaluate(calculationExpression);
