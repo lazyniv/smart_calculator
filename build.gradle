@@ -21,8 +21,12 @@ application {
     mainClassName = 'main.Main'
 }
 
+
 test {
-  useJUnitPlatform()
+
+  testLogging.showStandardStreams = true
+
+  failFast = true
 }
 
 run {
