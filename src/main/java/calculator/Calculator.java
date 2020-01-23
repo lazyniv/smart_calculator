@@ -77,8 +77,8 @@ public class Calculator {
 
     public static void printHelp() {
         System.out.println("Usage:\n"+
-                "help\tPrint this message" +
-                "exit\tExit from smart calculator"
+                "help\t\tPrint this message\n" +
+                "exit\t\tExit from smart calculator"
         );
     }
 
