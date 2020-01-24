@@ -24,7 +24,7 @@ public class Main {
                 System.out.print("");
                 continue;
             }
-            if(line.contains("/")) {
+            if(line.startsWith("/")) {
                 System.out.println("Unknown command");
                 continue;
             }
