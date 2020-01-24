@@ -11,6 +11,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Calculator calculator = new Calculator();
         while(true) {
+            System.out.print("\n> ");
             String line = scanner.nextLine();
             if(line.equals("/exit")) {
                 System.out.println("Bye!");
@@ -18,6 +19,10 @@ public class Main {
             }
             if(line.equals("/help")) {
                 Calculator.printHelp();
+                continue;
+            }
+            if(line.equals("/vars")) {
+                calculator.listVars();
                 continue;
             }
             if(line.equals("")) {

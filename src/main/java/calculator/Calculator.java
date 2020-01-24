@@ -76,13 +76,18 @@ public class Calculator {
     }
 
     public static void printHelp() {
-        System.out.println("Usage:\n"+
-                "help\t\tPrint this message\n" +
-                "exit\t\tExit from smart calculator"
+        System.out.println("Usage:\n\n"+
+                "/help\tPrint this message\n" +
+                "/exit\tExit from smart calculator\n" +
+                "/vars\tList of all exists variables and their values by pairs (variable, value)"
         );
     }
 
-    private int parseToken(Token token) throws CalculatorException { //May occurs left/right bracket
+    public void listVars() {
+        variableToValue.forEach((variable, value) -> System.out.printf("(%s, %d)\n", variable, value));
+    }
+
+    private int parseToken(Token token) throws CalculatorException {
         if (token.isVariable()) {
             if (!variableToValue.containsKey(token)) {
                 throw new UnknownVariableException("Unknown variable");
