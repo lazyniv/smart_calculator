@@ -8,28 +8,29 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        printGreeting();
         Scanner scanner = new Scanner(System.in);
         Calculator calculator = new Calculator();
-        while(true) {
+        while (true) {
             System.out.print("\n> ");
             String line = scanner.nextLine();
-            if(line.equals("/exit")) {
+            if (line.equals("/exit")) {
                 System.out.println("Bye!");
                 break;
             }
-            if(line.equals("/help")) {
+            if (line.equals("/help")) {
                 Calculator.printHelp();
                 continue;
             }
-            if(line.equals("/vars")) {
+            if (line.equals("/vars")) {
                 calculator.listVars();
                 continue;
             }
-            if(line.equals("")) {
+            if (line.equals("")) {
                 System.out.print("");
                 continue;
             }
-            if(line.startsWith("/")) {
+            if (line.startsWith("/")) {
                 System.out.println("Unknown command");
                 continue;
             }
@@ -44,5 +45,10 @@ public class Main {
                 System.err.println(e.getMessage());
             }
         }
+    }
+
+    public static void printGreeting() {
+        System.out.println("Smart Calculator 1.0\n" +
+                "type  \"/help\" for more information");
     }
 }

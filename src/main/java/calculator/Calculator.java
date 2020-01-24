@@ -78,7 +78,7 @@ public class Calculator {
     public static void printHelp() {
         System.out.println("Usage:\n\n"+
                 "/help\tPrint this message\n" +
-                "/exit\tExit from smart calculator\n" +
+                "/exit\tExit from Smart Calculator\n" +
                 "/vars\tList of all exists variables and their values by pairs (variable, value)"
         );
     }
