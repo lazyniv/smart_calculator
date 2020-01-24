@@ -36,7 +36,7 @@ public class Main {
                     System.out.println(calculator.evaluate(expression));
                 }
             } catch (CalculatorException e) {
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
             }
         }
     }
