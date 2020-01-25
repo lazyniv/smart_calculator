@@ -19,7 +19,7 @@ public class Expression {
     private static final Pattern ASSIGNMENT_PATTERN = Pattern.compile("[a-zA-Z]([a-zA-Z]|\\d)*\\s*=\\s*" +
             CALCULATION_PATTERN.pattern());//FIXME variable might contain digits
 
-    private static final Pattern DELIMITER_PATTERN = Pattern.compile("[+\\-*/^()#~]"); //FIXME change name
+    private static final Pattern DELIMITER_PATTERN = Pattern.compile("[+\\-*/^()#~]");
 
     private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
 
@@ -98,7 +98,7 @@ public class Expression {
         String preparedExpression = ExpressionUtils.eliminateMultiplePlusAndMinus(
                 ExpressionUtils.setUnaryOperators(expression)
         );
-        String[] tokens = preparedExpression.replaceAll("\\s+","").split(String.format(WITH_DELIMITER,DELIMITER_PATTERN));  //FIXME it's костыль
+        String[] tokens = preparedExpression.replaceAll("\\s+","").split(String.format(WITH_DELIMITER,DELIMITER_PATTERN));
         List<Token> tokensList = new ArrayList<>();
         Arrays.stream(tokens).forEach(t -> tokensList.add(new Token(t)));
         return tokensList;

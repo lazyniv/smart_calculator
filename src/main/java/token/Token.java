@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 public class Token {
     private final String token;
 
-    private static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zA-Z]+"); //FIXME variable may have a prefix with sign "-" or "+"
+    private static final Pattern VARIABLE_PATTERN = Pattern.compile("[a-zA-Z]+");
 
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("[-+]?\\d+"); //FIXME number may have a prefix with sign "-" or "+"
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("[-+]?\\d+");
 
     public static final Token LEFT_BRACKET = new Token("(");
 

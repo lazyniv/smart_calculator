@@ -21,14 +21,12 @@ public class Calculator {
                 stack.offerLast(token);
             }
             else if(token.equals(Token.UNARY_MINUS)) {
-                int o = parseToken(stack.pollLast());
+                int o = parseToken(Objects.requireNonNull(stack.pollLast()));
                 stack.offerLast(new Token(-o));
             }
-            else if(token.equals(Token.UNARY_PLUS)) { //FIXME
-            }
             else {
-                int o2 = parseToken(stack.pollLast());
-                int o1 = parseToken(stack.pollLast());
+                int o2 = parseToken(Objects.requireNonNull(stack.pollLast()));
+                int o1 = parseToken(Objects.requireNonNull(stack.pollLast()));
                 switch (token.toString()) {
                     case "^":
                         stack.offerLast(new Token((int) Math.pow(o1,o2)));
@@ -50,11 +48,11 @@ public class Calculator {
                 }
             }
         }
-        return parseToken(stack.pollLast());
+        return parseToken(Objects.requireNonNull(stack.pollLast()));
     }
 
     public void assign(Expression assignment) throws CalculatorException {
-        List<Token> tokensList = assignment.split("\\s*=\\s*", 2); //FIXME change name
+        List<Token> tokensList = assignment.split("\\s*=\\s*", 2);
         Token variable = tokensList.get(0);
 
         if(!variable.isVariable()) {

@@ -14,7 +14,7 @@ public class ExpressionUtils {
                 .replaceAll("\\++", "+");
     }
 
-    public static String setUnaryOperators(String expression) { //FIXME костыль
+    public static String setUnaryOperators(String expression) {
         return expression.replaceAll(UNARY_MINUS_REGEX, "~")
                 .replaceAll(UNARY_PLUS_REGEX, "#");
     }
