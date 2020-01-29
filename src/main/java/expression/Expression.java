@@ -6,6 +6,7 @@ import token.Token;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Expression {
     private String expression;
@@ -99,8 +100,9 @@ public class Expression {
                 ExpressionUtils.setUnaryOperators(expression)
         );
         String[] tokens = preparedExpression.replaceAll("\\s+","").split(String.format(WITH_DELIMITER,DELIMITER_PATTERN));
-        List<Token> tokensList = new ArrayList<>();
-        Arrays.stream(tokens).forEach(t -> tokensList.add(new Token(t)));
+        List<Token> tokensList = Arrays.stream(tokens)
+                .map(Token::new)
+                .collect(Collectors.toList());
         return tokensList;
     }
 
