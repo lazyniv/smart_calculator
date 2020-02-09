@@ -20,7 +20,7 @@ Java 1.9 or latter
 ## Build and run
 ### If you have gradle:
 ```
-$ grudle build
+$ gradle build
 $ java -jar build/libs/smart_calculator-1.0.jar
 ```
 ### Otherwise
