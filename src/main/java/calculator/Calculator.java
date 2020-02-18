@@ -1,17 +1,32 @@
 package calculator;
 
-import exceptions.*;
+import exception.CalculatorException;
 import expression.Expression;
 import token.Token;
 
 import java.util.*;
 
 public class Calculator {
-    private Map<Token, Integer> variableToValue = new HashMap<>();
+
+    private static Calculator instance = null;
+
+    private Map<Token, Integer> variableToValue;
+
+    private Calculator() {
+        variableToValue = new HashMap<>();
+    }
+
+    public static Calculator getInstance()
+    {
+        if (instance == null)
+            instance = new Calculator();
+
+        return instance;
+    }
 
     public int evaluate(Expression expression) throws CalculatorException {
         if(!expression.isCalculation()) {
-            throw new InvalidExpressionException("Invalid expression");
+            throw new CalculatorException("Invalid expression");
         }
         List<Token> postfixTokensList = expression.toPostfixTokensList();
         Deque<Token> stack = new ArrayDeque<>();
@@ -19,12 +34,12 @@ public class Calculator {
         for(Token token : postfixTokensList) {
             if(token.isNumber() || token.isVariable()) {
                 stack.offerLast(token);
-            }
-            else if(token.equals(Token.UNARY_MINUS)) {
+            } else if(token.equals(Token.UNARY_MINUS)) {
                 int o = parseToken(Objects.requireNonNull(stack.pollLast()));
                 stack.offerLast(new Token(-o));
-            }
-            else {
+            } else if(token.equals(Token.UNARY_PLUS)) {
+                stack.offerLast(stack.pollLast());
+            } else {
                 int o2 = parseToken(Objects.requireNonNull(stack.pollLast()));
                 int o1 = parseToken(Objects.requireNonNull(stack.pollLast()));
                 switch (token.toString()) {
@@ -48,6 +63,7 @@ public class Calculator {
                 }
             }
         }
+
         return parseToken(Objects.requireNonNull(stack.pollLast()));
     }
 
@@ -56,13 +72,13 @@ public class Calculator {
         Token variable = tokensList.get(0);
 
         if(!variable.isVariable()) {
-            throw new InvalidIdentifierException("Invalid identifier");
+            throw new CalculatorException("Invalid identifier");
         }
 
         Expression calculationExpression = new Expression(tokensList.get(1));
 
         if(!calculationExpression.isCalculation()) {
-            throw new InvalidAssignmentException("Invalid assignment");
+            throw new CalculatorException("Invalid assignment");
         }
 
         int assignedValue = evaluate(calculationExpression);
@@ -77,7 +93,8 @@ public class Calculator {
         System.out.println("Usage:\n\n"+
                 "/help\tPrint this message\n" +
                 "/exit\tExit from Smart Calculator\n" +
-                "/vars\tList of all exists variables and their values by pairs (variable, value)"
+                "/vars\tList of all exists variables and their values by pairs (variable, value)\n" +
+                "/drop\tDrop all variables"
         );
     }
 
@@ -85,10 +102,14 @@ public class Calculator {
         variableToValue.forEach((variable, value) -> System.out.printf("(%s, %d)\n", variable, value));
     }
 
+    public void dropVars() {
+        variableToValue.clear();
+    }
+
     private int parseToken(Token token) throws CalculatorException {
         if (token.isVariable()) {
             if (!variableToValue.containsKey(token)) {
-                throw new UnknownVariableException("Unknown variable");
+                throw new CalculatorException("Unknown variable");
             }
             return variableToValue.get(token);
         }

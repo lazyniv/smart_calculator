@@ -1,4 +1,4 @@
-package expression_utils;
+package expression;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,6 +48,13 @@ public class ExpressionUtilsTest {
     }
 
     @Test
+    public void eliminateMultiplePlusAndMinus_StringWithUnaryPlusGiven_ShouldBeRight() {
+        String test = "++a--b";
+        String expected = "+a+b";
+        Assert.assertEquals(expected, ExpressionUtils.eliminateMultiplePlusAndMinus(test));
+    }
+
+    @Test
     public void  setUnaryOperators_StringWhereFirstSignIsMinusGiven_ShouldBeRight() {
         String test = "-a * +b";
         String expected = "~a * #b";
@@ -72,6 +79,13 @@ public class ExpressionUtilsTest {
     public void  setUnaryOperators_StringWhichContainsSeveralPlusesInARowWithoutSpacesGiven_ShouldBeRight() {
         String test = "a+++b";
         String expected = "a+++b";
+        Assert.assertEquals(expected, ExpressionUtils.setUnaryOperators(test));
+    }
+
+    @Test
+    public void setUnaryOperators_StringWithUnaryPlusGiven_ShouldBeRight() {
+        String test = "+a-b";
+        String expected = "#a-b";
         Assert.assertEquals(expected, ExpressionUtils.setUnaryOperators(test));
     }
 

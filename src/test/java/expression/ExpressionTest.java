@@ -1,6 +1,6 @@
 package expression;
 
-import exceptions.InvalidExpressionException;
+import exception.CalculatorException;
 import org.junit.Assert;
 import org.junit.Test;
 import token.Token;
@@ -45,7 +45,7 @@ public class ExpressionTest {
     }
 
     @Test
-    public void isAssignment_AssignmentWhichContainEqualAtTheEndGiven_False() { //FIXME change name
+    public void isAssignment_AssignmentWhichContainEqualAtTheEndGiven_False() {
         String test = "foo * bar = 1";
         Expression testExpression = new Expression(test);
         Assert.assertFalse(testExpression.isAssignment());
@@ -184,7 +184,19 @@ public class ExpressionTest {
     }
 
     @Test
-    public void ToPostfixTokensList_SimpleExpressionGiven_ShouldBeRightResult() throws InvalidExpressionException {
+    public void toTokensList_ExpressionWithUnaryPlusGiven_ShouldBeRightResult() {
+        String test = "+a-b";
+        List<Token> expected = List.of(
+                new Token("#"), new Token("a"),
+                new Token("-"), new Token("b")
+        );
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toTokensList();
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void ToPostfixTokensList_SimpleExpressionGiven_ShouldBeRightResult() throws CalculatorException {
         String test = "a + b * c";
         List<Token> expected = List.of(
                 new Token("a"), new Token("b"), new Token("c"),
@@ -196,7 +208,7 @@ public class ExpressionTest {
     }
 
     @Test
-    public void ToPostfixTokensList_ExpressionWithPairedParenthesesGiven_ShouldBeRightResult() throws InvalidExpressionException {
+    public void ToPostfixTokensList_ExpressionWithPairedParenthesesGiven_ShouldBeRightResult() throws CalculatorException {
         String test = "(a + b) * c";
         List<Token> expected = List.of(
                 new Token("a"), new Token("b"), new Token("+"),
@@ -208,7 +220,7 @@ public class ExpressionTest {
     }
 
     @Test
-    public void ToPostfixTokensList_ExpressionWithoutSpacesGiven_ShouldBeRightResult() throws InvalidExpressionException {
+    public void ToPostfixTokensList_ExpressionWithoutSpacesGiven_ShouldBeRightResult() throws CalculatorException {
         String test = "100-x^y*(a+b)";
         List<Token> expected = List.of(
                 new Token("100"), new Token("x"), new Token("y"),
@@ -220,22 +232,22 @@ public class ExpressionTest {
         Assert.assertEquals(expected, actual);
     }
 
-    @Test(expected = InvalidExpressionException.class)
-    public void ToPostfixTokensList_ExpressionWithUnpairedRightBracketGiven_ShouldThrowsInvalidExpressionException() throws InvalidExpressionException {
+    @Test(expected = CalculatorException.class)
+    public void ToPostfixTokensList_ExpressionWithUnpairedRightBracketGiven_ShouldThrowsInvalidExpressionException() throws CalculatorException {
         String test = "(a + b)) * c";
         Expression testExpression = new Expression(test);
-        List<Token> actual = testExpression.toPostfixTokensList();
+        testExpression.toPostfixTokensList();
     }
 
-    @Test(expected = InvalidExpressionException.class)
-    public void ToPostfixTokensList_ExpressionWithLeftParenthesesGiven_ShouldThrowsInvalidExpressionException() throws InvalidExpressionException {
+    @Test(expected = CalculatorException.class)
+    public void ToPostfixTokensList_ExpressionWithLeftParenthesesGiven_ShouldThrowsInvalidExpressionException() throws CalculatorException {
         String test = "(a + b) * (c";
         Expression testExpression = new Expression(test);
-        List<Token> actual = testExpression.toPostfixTokensList();
+        testExpression.toPostfixTokensList();
     }
 
     @Test
-    public void ToPostfixTokensList_ExpressionWithUnaryMinusGiven_ShouldBeRightResult() throws InvalidExpressionException {
+    public void ToPostfixTokensList_ExpressionWithUnaryMinusGiven_ShouldBeRightResult() throws CalculatorException {
         String test = "-a + -b";
         List<Token> expected = List.of(
                 new Token("a"), new Token("~"), new Token("b"),
@@ -246,6 +258,17 @@ public class ExpressionTest {
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
+    public void toPostfixTokensList_ExpressionWithUnaryPlusGiven_ShouldBeRightResult() throws CalculatorException {
+        String test = "+a-b";
+        List<Token> expected = List.of(
+                new Token("a"), new Token("#"),
+                new Token("b"), new Token("-")
+        );
+        Expression testExpression = new Expression(test);
+        List<Token> actual = testExpression.toPostfixTokensList();
+        Assert.assertEquals(expected, actual);
+    }
 
 
 }

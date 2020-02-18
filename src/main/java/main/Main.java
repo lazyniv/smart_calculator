@@ -1,6 +1,6 @@
 package main;
 
-import exceptions.CalculatorException;
+import exception.CalculatorException;
 import parser.Parser;
 
 import java.util.Scanner;

@@ -1,7 +1,6 @@
 package expression;
 
-import exceptions.InvalidExpressionException;
-import expression_utils.ExpressionUtils;
+import exception.CalculatorException;
 import token.Token;
 
 import java.util.*;
@@ -18,7 +17,7 @@ public class Expression {
     );
 
     private static final Pattern ASSIGNMENT_PATTERN = Pattern.compile("[a-zA-Z]([a-zA-Z]|\\d)*\\s*=\\s*" +
-            CALCULATION_PATTERN.pattern());//FIXME variable might contain digits
+            CALCULATION_PATTERN.pattern());
 
     private static final Pattern DELIMITER_PATTERN = Pattern.compile("[+\\-*/^()#~]");
 
@@ -46,9 +45,9 @@ public class Expression {
         return CALCULATION_PATTERN.matcher(expression).matches();
     }
 
-    public List<Token> toPostfixTokensList() throws InvalidExpressionException {
+    public List<Token> toPostfixTokensList() throws CalculatorException {
         if(!isCalculation()) {
-            throw new InvalidExpressionException("Invalid expression");
+            throw new CalculatorException("Invalid expression");
         }
 
         Deque<Token> stack = new ArrayDeque<>();
@@ -64,7 +63,7 @@ public class Expression {
                 }
                 else if(token.equals(Token.RIGHT_BRACKET)) {
                     if(!stack.contains(Token.LEFT_BRACKET)){
-                        throw new InvalidExpressionException("Invalid expression"); //Unpaired parentheses
+                        throw new CalculatorException("Invalid expression");
                     }
                     while(!stack.peekLast().equals(Token.LEFT_BRACKET)) {
                         postfixTokensList.add(stack.pollLast());
@@ -83,7 +82,7 @@ public class Expression {
             postfixTokensList.add(stack.pollLast());
         }
         if(!stack.isEmpty()) {
-            throw new InvalidExpressionException("Invalid expression"); //Unpaired parentheses
+            throw new CalculatorException("Invalid expression");
         }
         return postfixTokensList;
     }

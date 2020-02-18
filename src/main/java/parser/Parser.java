@@ -1,11 +1,11 @@
 package parser;
 
 import calculator.Calculator;
-import exceptions.CalculatorException;
+import exception.CalculatorException;
 import expression.Expression;
 
 public class Parser {
-    private static Calculator calculator = new Calculator();
+    private static Calculator calculator = Calculator.getInstance();
 
     public static void parse(String line) throws CalculatorException {
         if(line.equals("")) {
@@ -33,6 +33,9 @@ public class Parser {
                 break;
             case "/vars":
                 calculator.listVars();
+                break;
+            case "/drop":
+                calculator.dropVars();
                 break;
             default:
                 System.err.println("Unknown command");

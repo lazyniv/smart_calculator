@@ -1,4 +1,4 @@
-package expression_utils;
+package expression;
 
 public class ExpressionUtils {
 
